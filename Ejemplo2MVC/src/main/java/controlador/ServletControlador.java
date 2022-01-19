@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -9,26 +10,40 @@ import modelo.Rectangulo;
 
 @WebServlet("/ServletControlador")
 public class ServletControlador extends HttpServlet {
-    
-    protected void doGet(HttpServletRequest request,HttpServletResponse response)
-            throws ServletException, IOException{
-        
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         //1.Procesamos los parametros
-//        String base = request.getParameter("base");
-//        String altura = request.getParameter("altura");
-        
+        String accion = request.getParameter("accion");
+
         //2.Creamos los JavaBeans que vamos a usar en nuestra aplicacion
-        Rectangulo rec = new Rectangulo(4,5);
-        
-        //3.Vamos a compartir nuestras variables en un determinado alcance
-        request.setAttribute("mensaje", "Saludos clsae desde mi Servlet");
-        
-        //Tambien podemos compartir en alcance de Sesion
-        HttpSession sesion = request.getSession();
-        sesion.setAttribute("rectangulo", rec);
-        
-        //4.Redireccionamos a un JSP
-        RequestDispatcher rd = request.getRequestDispatcher("vista/desplegarVariables.jsp");
-        rd.forward(request, response);
+        Rectangulo recRequest = new Rectangulo(4, 5);
+        Rectangulo recSesion = new Rectangulo(6, 10);
+        Rectangulo recApp = new Rectangulo(1, 3);
+
+        if ("agregarVariables".equals(accion)) {
+            //Alcance request
+            request.setAttribute("rectanguloRequest", recRequest);
+
+            //Alcance sesion
+            HttpSession sesion = request.getSession();
+            sesion.setAttribute("rectanguloSesion",recSesion);
+
+            //Alcance app
+            ServletContext application = this.getServletContext();
+            application.setAttribute("rectanguloAplicacion", recApp);
+
+            //Ahora redireccionamos
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }else if("listarVariables".equals(accion)){
+            
+            request.getRequestDispatcher("/WEB-INF/alcanceVariables.jsp").forward(request, response);
+            
+        }else{
+            request.setAttribute("mensaje", "accion no proporcionada o accion desconocida");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
+
     }
 }

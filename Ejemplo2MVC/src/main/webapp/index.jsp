@@ -3,13 +3,23 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Ejemplo 1 MVC</title>
+        <title>Ejemplo 2 MVC</title>
     </head>
     <body>
-        <h1>Ejemplo 1 MVC</h1>
+        <h1>Ejemplo 2 MVC</h1>
         <br/>
-        <a href="${pageContext.request.contextPath}/ServletControlador?base=4&altura=10">
-            Link al servlet controlador que me despliega las variables
+        <div style="color: red">${mensaje}</div>
+        <a href="${pageContext.request.contextPath}/ServletControlador">
+            Link al servlet controlador sin parametros
         </a>
+        <br/>
+        <a href="${pageContext.request.contextPath}/ServletControlador?accion=agregarVariables">
+            Link al servlet controlador para agregar variables
+        </a>
+        <br/>
+        <a href="${pageContext.request.contextPath}/ServletControlador?accion=listarVariables">
+            Link al servlet controlador para listar variables
+        </a>
+         
     </body>
 </html>
